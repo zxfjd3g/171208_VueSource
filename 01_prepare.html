@@ -7,7 +7,6 @@
 <body>
 
 <div id="test">尚硅谷IT教育</div>
-
 <ul id="fragment_test">
   <li>test1</li>
   <li>test2</li>
@@ -71,12 +70,49 @@
   p.fullName = 'E-F'  // 自动调用setter
   console.log(p.firstName, p.lastName) // E F     //setter
 
-
+  Object.defineProperty(p, 'fullName2', {
+    // 数据描述符
+    configurable: false,  // 是否可以重新define
+    enumerable: true, // 是否可以枚举(for..in / keys())
+    value: 'A-B', // 指定初始值
+    writable: false //value是否可以修改
+  })
 
   //4. Object.keys(obj): 得到对象自身可枚举属性组成的数组
+  const names = Object.keys(p)
+  console.log(names)
   //5. obj.hasOwnProperty(prop): 判断prop是否是obj自身的属性
-  //6. DocumentFragment: 文档碎片(高效批量更新多个节点)
+  console.log(p.toString, p.hasOwnProperty('toString')) // 函数 false
+  console.log(p.firstName, p.hasOwnProperty('firstName')) // true
 
+
+  /*
+<ul id="fragment_test">
+  <li>test1</li>
+  <li>test2</li>
+  <li>test3</li>
+</ul>
+   */
+  //6. DocumentFragment: 文档碎片(高效批量更新多个节点)
+  // 1. 创建容器: fragment
+  const fragment = document.createDocumentFragment() // 内存中的节点容器
+  // 2. 取出ul中所有的子节点添加到fragment容器中
+  const ul = document.getElementById('fragment_test')
+  let child
+  while(child=ul.firstChild) { // 一个节点只能有一个父亲
+    fragment.appendChild(child) // 从ul中移除child节点, 将child添加为fragment的子节点
+  }
+
+  // 3. 遍历fragment中所有的li, 并修改其标签体文本atguigu
+  const nodes = fragment.childNodes
+  Array.prototype.slice.call(nodes).forEach(node => {
+    if(node.nodeType===1) { // <li>
+      node.textContent = 'atguigu' // 此时并没有更新界面
+    }
+  })
+
+  // 4. 将fragment添加到ul中
+  ul.appendChild(fragment)
 
 </script>
 </body>
