@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<div id="test">尚硅谷IT教育</div>
+
+<ul id="fragment_test">
+  <li>test1</li>
+  <li>test2</li>
+  <li>test3</li>
+</ul>
+
+
+<!--
+1. [].slice.call(lis): 将伪数组转换为真数组
+2. node.nodeType: 得到节点类型
+3. Object.defineProperty(obj, propertyName, {}): 给对象添加属性(指定描述符)
+4. Object.keys(obj): 得到对象自身可枚举属性组成的数组
+5. obj.hasOwnProperty(prop): 判断prop是否是obj自身的属性
+6. DocumentFragment: 文档碎片(高效批量更新多个节点)
+-->
+
+<script type="text/javascript">
+  //1. [].slice.call(lis): 将伪数组转换为真数组
+  const lis = document.getElementsByTagName('li') // lis是一个伪数组
+  console.log(lis instanceof Array, lis.forEach) // false undefined
+
+  Array.prototype.slice2 = function (start=0, end=this.length) {
+    const result = []
+    for(let i=start;i<end;i++) {
+      result.push(this[i])
+    }
+    return result
+  }
+  const lis2 = Array.prototype.slice.call(lis)  // lis.slice()
+  console.log(lis2 instanceof Array, lis2.forEach) // true 函数
+
+  //2. node.nodeType: 得到节点类型
+  const elementNode = document.getElementById('test')
+  const attrNode = elementNode.getAttributeNode('id')
+  const textNode = elementNode.firstChild
+  console.log(elementNode.nodeType, attrNode.nodeType, textNode.nodeType) // 1 2 3
+
+  //3. Object.defineProperty(obj, propertyName, {}): 给对象添加属性(指定描述符)
+  const p = {
+    firstName: 'A',
+    lastName: 'B'
+  }
+  // p.fullName = p.firstName + '-' + p.lastName
+  Object.defineProperty(p, 'fullName', { // 属性描述符: 配置对象
+    // 1. 存取描述符
+    get () { // 当读取属性值时自动调用, 根据相关的其它数据计算返回属性值
+      return  this.firstName + '-' + this.lastName
+    },
+
+    set (value) { // 当属性值发生了改变时自动调用, 监视属性值的改变, 改变相关的其它数据
+      // 更新firstName和lastName
+      const names = value.split('-')
+      this.firstName = names[0]
+      this.lastName = names[1]
+    }
+  })
+  console.log(p.fullName) // A-B   // getter
+  p.firstName = 'C'
+  p.lastName = 'D'
+  console.log(p.fullName)  // C-D   // getter
+  p.fullName = 'E-F'  // 自动调用setter
+  console.log(p.firstName, p.lastName) // E F     //setter
+
+
+
+  //4. Object.keys(obj): 得到对象自身可枚举属性组成的数组
+  //5. obj.hasOwnProperty(prop): 判断prop是否是obj自身的属性
+  //6. DocumentFragment: 文档碎片(高效批量更新多个节点)
+
+
+</script>
+</body>
+</html>
