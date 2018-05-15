@@ -10,6 +10,44 @@
   -->
 </head>
 <body>
+<div id="test">
+  <p>{{name}}</p>
+  <p v-text="name"></p>
+  <p>{{gf.name}}</p>
+  <button v-on:click="update">更新</button>
+</div>
+<script type="text/javascript" src="js/mvvm/compile.js"></script>
+<script type="text/javascript" src="js/mvvm/mvvm.js"></script>
+<script type="text/javascript" src="js/mvvm/observer.js"></script>
+<script type="text/javascript" src="js/mvvm/watcher.js"></script>
+<script type="text/javascript">
+  /*
+  watcher对象: 非事件指令表达式的个数  一般指令+大括号表达式
+  dep对象: data中所有层次属性的个数
+
+  表达式与data中的属性有什么关系?  1 : n
+  watcher与dep: n : n
+  什么时候一个watcher对应多个dep?   多层/级的表达式
+  什么时候一个dep对应多个watcher? 当前属性被多个表达式使用
+  */
+  const vm = new MVVM({
+    el: '#test',
+    data: {
+      name: 'DAMU',
+      gf: {
+        name: 'binbin',
+        age: 18
+      }
+    },
+
+    methods: {
+      update () {
+        this.name = 'SADAMU'
+        // this.gf.name = 'fanfan'
+      }
+    }
+  })
+</script>
 </body>
 
 </html>
