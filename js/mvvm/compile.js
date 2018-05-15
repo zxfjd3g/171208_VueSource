@@ -61,22 +61,29 @@ Compile.prototype = {
   },
 
   compile: function (node) {
+    // 得到所有的属性节点
     var nodeAttrs = node.attributes,
       me = this;
-
+    // 遍历所有属性
     [].slice.call(nodeAttrs).forEach(function (attr) {
+      // 得到属性名: v-on:click
       var attrName = attr.name;
+      // 如果是指令属性
       if (me.isDirective(attrName)) {
+        // 得到属性值, 也就是表达式: show
         var exp = attr.value;
+        // 得到指令名: on:click
         var dir = attrName.substring(2);
-        // 事件指令
+        // 如果是事件指令
         if (me.isEventDirective(dir)) {
+          // 处理/解析事件指令
           compileUtil.eventHandler(node, me.$vm, exp, dir);
-          // 普通指令
+        // 如果是普通指令
         } else {
+          // 解析一般指令
           compileUtil[dir] && compileUtil[dir](node, me.$vm, exp);
         }
-
+        // 删除指令属性
         node.removeAttribute(attrName);
       }
     });
@@ -110,10 +117,12 @@ var compileUtil = {
     this.bind(node, vm, exp, 'text');
   },
 
+  // 解析v-html
   html: function (node, vm, exp) {
     this.bind(node, vm, exp, 'html');
   },
 
+  // 解析v-model
   model: function (node, vm, exp) {
     this.bind(node, vm, exp, 'model');
 
@@ -130,11 +139,12 @@ var compileUtil = {
     });
   },
 
+  // 解析v-class
   class: function (node, vm, exp) {
     this.bind(node, vm, exp, 'class');
   },
 
-  // 调用对应的节点更新函数去更新节点
+  // 解析指令最要调用的方法
   bind: function (node, vm, exp, dir) {
     // 根据指令名得到对应的节点更新函数
     var updaterFn = updater[dir + 'Updater'];
@@ -148,10 +158,13 @@ var compileUtil = {
 
   // 事件处理
   eventHandler: function (node, vm, exp, dir) {
+    // 从指令名中得到事件名: click
     var eventType = dir.split(':')[1],
+      // 根据表达式从methods中取出对应的事件回调函数
       fn = vm.$options.methods && vm.$options.methods[exp];
 
     if (eventType && fn) {
+      // 绑定指定事件名和回调函数(强制绑定this为vm)的dom事件监听
       node.addEventListener(eventType, fn.bind(vm), false);
     }
   },

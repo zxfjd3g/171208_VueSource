@@ -3,8 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <title>05_模板解析_一般指令</title>
+  <style>
+    .aa {
+      color: red;
+    }
+    .bb {
+      background: blue;
+    }
+  </style>
 </head>
 <body>
+<div id="test">
+  <p v-text="content"></p>
+  <p v-html="content"></p>
+  <p class="bb" v-class="myClass">尚硅谷IT教育尚硅谷IT教育</p>
+</div>
 
+<script type="text/javascript" src="js/mvvm/compile.js"></script>
+<script type="text/javascript" src="js/mvvm/mvvm.js"></script>
+<script type="text/javascript" src="js/mvvm/observer.js"></script>
+<script type="text/javascript" src="js/mvvm/watcher.js"></script>
+<script type="text/javascript">
+  const vm = new MVVM({
+    el: '#test',
+    data: {
+      content: '<a href="http://www.atguigu.com">尚硅谷IT教育</a>',
+      myClass: 'aa'
+    }
+  })
+</script>
 </body>
 </html>
