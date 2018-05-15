@@ -151,7 +151,9 @@ var compileUtil = {
     // 执行更新函数更新节点
     updaterFn && updaterFn(node, this._getVMVal(vm, exp));
 
-    new Watcher(vm, exp, function (value, oldValue) {
+    // 创建表达式对应的watcher, 指定用于更新节点的回调函数
+    new Watcher(vm, exp, function (value, oldValue) {// 当表达式相关的任意属性值发生了变化时自动调用
+      // 执行更新节点的函数去更新节点
       updaterFn && updaterFn(node, value, oldValue);
     });
   },
