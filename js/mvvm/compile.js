@@ -124,17 +124,22 @@ var compileUtil = {
 
   // 解析v-model
   model: function (node, vm, exp) {
+    // 初始化显示, 监视表达式实现更新显示
     this.bind(node, vm, exp, 'model');
 
     var me = this,
+      // 得到表达式的值
       val = this._getVMVal(vm, exp);
+    // 给节点绑定input监听(当input的value发生改变时自动调用)
     node.addEventListener('input', function (e) {
+      // 得到input最新的value
       var newValue = e.target.value;
       if (val === newValue) {
         return;
       }
-
+      // 将最新的值保存到表达式对应的属性上(会触发setter-->更新页面中相应的节点)
       me._setVMVal(vm, exp, newValue);
+      // 保存最新的值
       val = newValue;
     });
   },
